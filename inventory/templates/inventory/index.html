@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% load replace %}
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block content %}
+    {% include "breadcrumb.html" %}
+
+    <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-5">
+                    <div class="sidebar">
+                        <div class="sidebar__item">
+                            <h4>Department</h4>
+                            <ul>
+                                {% for category in categories %}
+                                    <li><a href="{{ category.url }}">{{ category.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="sidebar__item">
+                            <div class="blog__sidebar__item">
+                                <h4>Latest Products</h4>
+                                <div class="blog__sidebar__item__tags">
+                                    {% for product in latest_products %}
+                                        <a href="{{ product.url }}" class="blog__sidebar__recent__item">
+                                            <div class="blog__sidebar__recent__item__pic">
+                                                <img src="/products{{ product.thumbnail }}" alt="{{ product.title }}" style="height: 70px;width: 70px;">
+                                            </div>
+                                            <div class="blog__sidebar__recent__item__text">
+                                                <h6>{{ product.title }}</h6>
+                                                <span>${{ product.price }}</span>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-7">
+                    <div class="row">
+                        {% for product in page_obj %}
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg" data-setbg="/products{{ product.thumbnail }}">
+                                        <ul class="product__item__pic__hover">
+                                            {% comment %} <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li> {% endcomment %}
+                                            <li><a class="add-to-cart" data-id="{{ product.id }}" 
+                                                data-price="{{ product.price }}" data-quantity="1">
+                                                <i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6><a href="{{ product.url }}">{{ product.title }}</a></h6>
+                                        <h5>${{ product.price }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% include "pagination.html" %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Product Section End -->
+{% endblock content %}

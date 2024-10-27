@@ -1,0 +1,88 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Ogani Template">
+    <meta name="keywords" content="Ogani, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ogani | {% block title %}Best products for best prices{% endblock title %}</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <!-- FavIcon -->
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    {% include "header.html" %}
+    
+    {% block content %}{% endblock content %}
+    
+    {% include "footer.html" %}
+
+    <script>
+        var csrfToken = '{{ csrf_token }}';
+    </script>
+
+    <!-- Js Plugins -->
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/jquery.slicknav.js' %}"></script>
+    <script src="{% static 'js/mixitup.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="{% static 'js/functions.js' %}"></script>
+    
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "success" %}
+                <script>
+                    Toastify({
+                        text: "{{ message }}",
+                        close: true,
+                        style: {
+                            background: "#7fad39",
+                        }
+                    }).showToast();
+                </script>
+            {% else %}
+                <script>
+                    Toastify({
+                        text: "{{ message }}",
+                        close: true,
+                        style: {
+                            background: "red",
+                        }
+                    }).showToast();
+                </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+</body>
+
+</html>
