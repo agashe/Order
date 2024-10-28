@@ -7,7 +7,9 @@ from .forms import RegisterForm, LoginForm
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate, login, logout
+from .decorators import user_is_guest, user_is_auth
 
+@user_is_guest
 def log_in(request):
     error = ''
 
@@ -48,6 +50,7 @@ def log_in(request):
         'error': error,
     }) 
 
+@user_is_guest
 def register(request):
     error = ''
 
@@ -119,10 +122,12 @@ def register(request):
         'error': error,
     }) 
 
+@user_is_auth
 def log_out(request):
     logout(request)
     messages.success(request, "Bye !!")
     return redirect('/')
 
+@user_is_auth
 def profile(request):
     pass
