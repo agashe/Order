@@ -26,7 +26,7 @@
         <div class="header__top__right__auth">
             {% if user.is_authenticated %}
                 <div class="header__top__right__auth mr-1">
-                    <a href=""><i class="fa fa-user"></i> Profile</a>
+                    <a href="/user/profile"><i class="fa fa-user"></i> Profile</a>
                 </div>
                 <div class="header__top__right__auth">
                     <a href="/user/logout"><i class="fa fa-sign-out"></i> Logout</a>
@@ -98,7 +98,7 @@
                         </div>
                         {% if user.is_authenticated %}
                             <div class="header__top__right__auth mr-1">
-                                <a href=""><i class="fa fa-user"></i> Profile</a>
+                                <a href="/user/profile"><i class="fa fa-user"></i> Profile</a>
                             </div>
                             <div class="header__top__right__auth">
                                 <a href="/user/logout"><i class="fa fa-sign-out"></i> Logout</a>

@@ -130,4 +130,72 @@ def log_out(request):
 
 @user_is_auth
 def profile(request):
-    pass
+    error = ''
+
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            #check email
+            email_exists = User.objects.filter(email=form.cleaned_data['email'])
+
+            if len(email_exists) > 0:
+                return render(request, "user/profile.html", {
+                    'title': 'Register',
+                    'error': 'This email address already exists !',
+                }) 
+            
+            #check password
+            if form.cleaned_data['password'] != form.cleaned_data['confirm']:
+                return render(request, "user/profile.html", {
+                    'title': 'Register',
+                    'error': 'Password and the confirmation are not matched !',
+                })
+
+            # create username and password
+            username = (form.cleaned_data['first_name'] + 
+                form.cleaned_data['last_name'] + 
+                str(random.randint(0, 99999999999))
+            )
+
+            password = make_password(form.cleaned_data['password'])
+            
+            # create new user model
+            user = User.objects.create(
+                first_name = form.cleaned_data['first_name'],
+                last_name = form.cleaned_data['last_name'],
+                email = form.cleaned_data['email'],
+                password = password,
+                date_joined = datetime.datetime.now(),
+                is_active = True,
+                is_staff = False,
+                is_superuser = False,
+                username = username,
+            )
+
+            login(request, user)
+
+            messages.success(request, "Congratulations , Your account has been created successfully !")
+            return redirect('/')
+        else:
+            for error in form.errors.keys():
+                if error == 'first_name':
+                    error = 'Invalid first name !'
+                    break
+                elif error == 'last_name':
+                    error = 'Invalid last name !'
+                    break
+                elif error == 'email':
+                    error = 'Invalid email !'
+                    break
+                elif error == 'password':
+                    error = 'Invalid password !'
+                    break
+                elif error == 'confirm':
+                    error = 'Invalid confirm password !'
+                    break
+
+    return render(request, "user/profile.html", {
+        'title': 'Profile',
+        'error': error,
+    }) 
