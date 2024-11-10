@@ -138,7 +138,7 @@ def profile(request):
         user = request.user
 
         if form.is_valid():
-            #check old password and new password
+            # check old password and new password , and update the password
             # if form.cleaned_data['password'] != form.cleaned_data['confirm']:
             #     return render(request, "user/profile.html", {
             #         'title': 'Register',
@@ -146,8 +146,8 @@ def profile(request):
             #     })
 
             # password = make_password(form.cleaned_data['password'])
-            # update user model
             
+            # update user model
             user.first_name = form.cleaned_data['first_name']
             user.last_name = form.cleaned_data['last_name']
 
@@ -183,15 +183,27 @@ def profile(request):
                 elif error == 'last_name':
                     error = 'Invalid last name !'
                     break
-                elif error == 'email':
-                    error = 'Invalid email !'
+                elif error == 'phone':
+                    error = 'Invalid phone !'
                     break
-                elif error == 'password':
-                    error = 'Invalid password !'
+                elif error == 'country':
+                    error = 'Invalid country !'
                     break
-                elif error == 'confirm':
-                    error = 'Invalid confirm password !'
+                elif error == 'state':
+                    error = 'Invalid state !'
                     break
+                elif error == 'city':
+                    error = 'Invalid city !'
+                    break
+                elif error == 'address':
+                    error = 'Invalid address !'
+                    break
+                # elif error == 'password':
+                #     error = 'Invalid password !'
+                #     break
+                # elif error == 'confirm':
+                #     error = 'Invalid confirm password !'
+                #     break
 
     return render(request, "user/profile.html", {
         'title': 'Profile',
