@@ -20,6 +20,14 @@ function success(message) {
     }).showToast();
 }
 
+function updateCartInfo(data) {
+    $('#cart-items-count').text(data.cart_items_count);
+    $('#cart-total').text('$' + data.cart_total);
+
+    $('#cart-items-count-mobile').text(data.cart_items_count);
+    $('#cart-total-mobile').text('$' + data.cart_total);
+}
+
 $(document).ready(function () {
     // load cart info
     fetchCart();
@@ -37,9 +45,7 @@ $(document).ready(function () {
                 'quantity': $('#quantity').val() ?? $(this).data('quantity')
             },
             success: function (response) {
-                $('#cart-items-count').text(response.cart_items_count);
-                $('#cart-total').text('$' + response.cart_total);
-                
+                updateCartInfo(response);
                 success("Item was added successfully !");
             }
         }); 
@@ -66,8 +72,7 @@ $(document).ready(function () {
                 'data': JSON.stringify(cart_updated_items)
             },
             success: function (response) {
-                $('#cart-items-count').text(response.cart_items_count);
-                $('#cart-total').text('$' + response.cart_total);
+                updateCartInfo(response);
                 $('#order-total').text('$' + response.cart_total);
 
                 let cart_updated_items = JSON.parse(response.cart_items)['data'];
@@ -108,8 +113,7 @@ $(document).ready(function () {
                 'data': JSON.stringify(cart_updated_items)
             },
             success: function (response) {
-                $('#cart-items-count').text(response.cart_items_count);
-                $('#cart-total').text('$' + response.cart_total);
+                updateCartInfo(response);
                 $('#order-total').text('$' + response.cart_total);
 
                 let cart_updated_items = JSON.parse(response.cart_items)['data'];
