@@ -26,9 +26,8 @@ class OrderItem(models.Model):
 class Address(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  
     country = models.CharField(max_length=200)
-    city = models.CharField(max_length=200)
     state = models.CharField(max_length=200)
-    street = models.CharField(max_length=200)
-    unit = models.CharField(max_length=200)
-    postcode = models.CharField(max_length=200)
+    city = models.CharField(max_length=200)
+    details = models.CharField(max_length=200)
+    postcode = models.CharField(max_length=200, null=True)
     phone = models.CharField(max_length=200)

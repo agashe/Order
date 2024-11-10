@@ -3,11 +3,12 @@ from django.shortcuts import redirect
 from django.contrib import messages
 import datetime
 import random
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, ProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate, login, logout
 from .decorators import user_is_guest, user_is_auth
+from shop.models import Address
 
 @user_is_guest
 def log_in(request):
@@ -133,49 +134,46 @@ def profile(request):
     error = ''
 
     if request.method == "POST":
-        form = RegisterForm(request.POST)
+        form = ProfileForm(request.POST)
+        user = request.user
 
         if form.is_valid():
-            #check email
-            email_exists = User.objects.filter(email=form.cleaned_data['email'])
+            #check old password and new password
+            # if form.cleaned_data['password'] != form.cleaned_data['confirm']:
+            #     return render(request, "user/profile.html", {
+            #         'title': 'Register',
+            #         'error': 'Password and the confirmation are not matched !',
+            #     })
 
-            if len(email_exists) > 0:
-                return render(request, "user/profile.html", {
-                    'title': 'Register',
-                    'error': 'This email address already exists !',
-                }) 
+            # password = make_password(form.cleaned_data['password'])
+            # update user model
             
-            #check password
-            if form.cleaned_data['password'] != form.cleaned_data['confirm']:
-                return render(request, "user/profile.html", {
-                    'title': 'Register',
-                    'error': 'Password and the confirmation are not matched !',
-                })
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
 
-            # create username and password
-            username = (form.cleaned_data['first_name'] + 
-                form.cleaned_data['last_name'] + 
-                str(random.randint(0, 99999999999))
-            )
+            if user.address:
+                user.address.phone = form.cleaned_data['phone']
+                user.address.country = form.cleaned_data['country']
+                user.address.state = form.cleaned_data['state']
+                user.address.city = form.cleaned_data['city']
+                user.address.details = form.cleaned_data['details']
+                user.address.postcode = form.cleaned_data['postcode']
+                
+                user.address.save()
+            else:
+                address = Address.objects.create(
+                    user_id = user.id,
+                    phone = form.cleaned_data['phone'],
+                    country = form.cleaned_data['country'],
+                    state = form.cleaned_data['state'],
+                    city = form.cleaned_data['city'],
+                    details = form.cleaned_data['details'],
+                    postcode = form.cleaned_data['postcode']    
+                )
 
-            password = make_password(form.cleaned_data['password'])
-            
-            # create new user model
-            user = User.objects.create(
-                first_name = form.cleaned_data['first_name'],
-                last_name = form.cleaned_data['last_name'],
-                email = form.cleaned_data['email'],
-                password = password,
-                date_joined = datetime.datetime.now(),
-                is_active = True,
-                is_staff = False,
-                is_superuser = False,
-                username = username,
-            )
+            user.save()
 
-            login(request, user)
-
-            messages.success(request, "Congratulations , Your account has been created successfully !")
+            messages.success(request, "Congratulations , Your account has been updated successfully !")
             return redirect('/')
         else:
             for error in form.errors.keys():

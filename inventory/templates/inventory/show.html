@@ -19,8 +19,8 @@
                         {% if product.productimage_set.count > 1 %}
                             <div class="product__details__pic__slider owl-carousel">
                                 {% for product_image in product.productimage_set.all %}
-                                <img data-imgbigurl="/products{{ product_image.image.url }}"
-                                src="/products{{ product_image.image.url }}" alt="{{ product_image.image.url }}">
+                                    <img data-imgbigurl="/products{{ product_image.image.url }}"
+                                        src="/products{{ product_image.image.url }}" alt="{{ product_image.image.url }}">
                                 {% endfor %}
                             </div>
                         {% endif %}
