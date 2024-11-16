@@ -1,8 +1,12 @@
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from django.shortcuts import redirect
 from django.shortcuts import render
+from django.contrib import messages
 from .models import Order, OrderItem, Address
 from inventory.models import Product
+from user.decorators import user_is_auth
+from .forms import CheckoutForm
 import json
 
 def cart(request):
@@ -140,12 +144,86 @@ def cart(request):
     
     return response
 
+@user_is_auth
 def checkout(request):
-    title = 'Checkout'
+    error = ''
+
+    if request.method == "POST":
+        form = CheckoutForm(request.POST)
+        user = request.user
+
+        if form.is_valid():
+            # check old password and new password , and update the password
+            # if form.cleaned_data['password'] != form.cleaned_data['confirm']:
+            #     return render(request, "user/profile.html", {
+            #         'title': 'Register',
+            #         'error': 'Password and the confirmation are not matched !',
+            #     })
+
+            # password = make_password(form.cleaned_data['password'])
+            
+            # update user model
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+
+            if user.address:
+                user.address.phone = form.cleaned_data['phone']
+                user.address.country = form.cleaned_data['country']
+                user.address.state = form.cleaned_data['state']
+                user.address.city = form.cleaned_data['city']
+                user.address.details = form.cleaned_data['details']
+                user.address.postcode = form.cleaned_data['postcode']
+                
+                user.address.save()
+            else:
+                address = Address.objects.create(
+                    user_id = user.id,
+                    phone = form.cleaned_data['phone'],
+                    country = form.cleaned_data['country'],
+                    state = form.cleaned_data['state'],
+                    city = form.cleaned_data['city'],
+                    details = form.cleaned_data['details'],
+                    postcode = form.cleaned_data['postcode']    
+                )
+
+            user.save()
+
+            messages.success(request, "Congratulations , Your account has been updated successfully !")
+            return redirect('/')
+        else:
+            for error in form.errors.keys():
+                if error == 'first_name':
+                    error = 'Invalid first name !'
+                    break
+                elif error == 'last_name':
+                    error = 'Invalid last name !'
+                    break
+                elif error == 'phone':
+                    error = 'Invalid phone !'
+                    break
+                elif error == 'country':
+                    error = 'Invalid country !'
+                    break
+                elif error == 'state':
+                    error = 'Invalid state !'
+                    break
+                elif error == 'city':
+                    error = 'Invalid city !'
+                    break
+                elif error == 'address':
+                    error = 'Invalid address !'
+                    break
+                # elif error == 'password':
+                #     error = 'Invalid password !'
+                #     break
+                # elif error == 'confirm':
+                #     error = 'Invalid confirm password !'
+                #     break
 
     return render(request, "shop/checkout.html", {
-        'title': title,
-    })
+        'title': 'Checkout',
+        'error': error,
+    }) 
 
 def orders(request):
     title = 'Orders'
