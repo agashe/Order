@@ -1,0 +1,11 @@
+In next iteration :
+
+* Forget password
+* Update password
+* Enhance validation
+* Translation
+* Payment methods
+* Handle currency
+* Better order code generation
+* Make separated table for order's details like email and phone
+* Order status
