@@ -195,7 +195,7 @@ def profile(request):
                 elif error == 'city':
                     error = 'Invalid city !'
                     break
-                elif error == 'address':
+                elif error == 'details':
                     error = 'Invalid address !'
                     break
                 # elif error == 'password':

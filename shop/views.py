@@ -8,6 +8,7 @@ from inventory.models import Product
 from user.decorators import user_is_auth
 from .forms import CheckoutForm
 import json
+import random
 
 def cart(request):
     title = 'Cart'
@@ -148,24 +149,32 @@ def cart(request):
 def checkout(request):
     error = ''
 
+    cart_items = request.COOKIES.get('cart_items', '')
+
+    items = []
+    total = 0
+    
+    if cart_items != '':
+        cart_items = json.loads(cart_items)
+
+        for cart_item in cart_items['data']:
+            items.append({
+                'product': Product.objects.get(id=cart_item['id']),
+                'price': cart_item['price'],
+                'quantity': cart_item['quantity'],
+                'total': cart_item['total']
+            })
+
+            total += cart_item['total']
+    else:
+        # redirect to homepage if cart is empty
+        return redirect('/')
+
     if request.method == "POST":
         form = CheckoutForm(request.POST)
         user = request.user
 
         if form.is_valid():
-            # check old password and new password , and update the password
-            # if form.cleaned_data['password'] != form.cleaned_data['confirm']:
-            #     return render(request, "user/profile.html", {
-            #         'title': 'Register',
-            #         'error': 'Password and the confirmation are not matched !',
-            #     })
-
-            # password = make_password(form.cleaned_data['password'])
-            
-            # update user model
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-
             if user.address:
                 user.address.phone = form.cleaned_data['phone']
                 user.address.country = form.cleaned_data['country']
@@ -188,17 +197,37 @@ def checkout(request):
 
             user.save()
 
-            messages.success(request, "Congratulations , Your account has been updated successfully !")
-            return redirect('/')
+            # create new order , and save its details
+            order = Order.objects.create(
+                user_id = user.id,
+                code = str(random.randint(0, 99999999999)),
+                notes = form.cleaned_data['notes'],
+                total = total
+            )
+
+            for item in items:
+                OrderItem.objects.create(
+                    order_id = order.id,
+                    product_id = item['product'].id,
+                    price = item['product'].price,
+                    quantity = item['quantity'],
+                    total = item['total']
+                )
+
+            # empty the cart
+            response = redirect('/')
+            response.set_cookie('cart_items', json.dumps({
+                'data': []
+            }))
+            
+            response.set_cookie('cart_items_count', 0)
+            response.set_cookie('cart_total', 0)
+        
+            messages.success(request, "Your order has been created successfully !")
+            return response
         else:
             for error in form.errors.keys():
-                if error == 'first_name':
-                    error = 'Invalid first name !'
-                    break
-                elif error == 'last_name':
-                    error = 'Invalid last name !'
-                    break
-                elif error == 'phone':
+                if error == 'phone':
                     error = 'Invalid phone !'
                     break
                 elif error == 'country':
@@ -210,18 +239,14 @@ def checkout(request):
                 elif error == 'city':
                     error = 'Invalid city !'
                     break
-                elif error == 'address':
+                elif error == 'details':
                     error = 'Invalid address !'
                     break
-                # elif error == 'password':
-                #     error = 'Invalid password !'
-                #     break
-                # elif error == 'confirm':
-                #     error = 'Invalid confirm password !'
-                #     break
-
+                
     return render(request, "shop/checkout.html", {
         'title': 'Checkout',
+        'items': items,
+        'total': total,
         'error': error,
     }) 
 
