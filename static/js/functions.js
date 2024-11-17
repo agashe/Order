@@ -118,6 +118,11 @@ $(document).ready(function () {
 
                 let cart_updated_items = JSON.parse(response.cart_items)['data'];
 
+                // reload the page if the cart is empty
+                if (cart_updated_items.length == 0) {
+                    window.location.reload();
+                }
+
                 cart_updated_items.forEach(function (item) {
                     $('#item-total-' + item['id']).text('$' + item['total']);
                 });
