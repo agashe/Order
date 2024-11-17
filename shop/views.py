@@ -253,13 +253,22 @@ def checkout(request):
 def orders(request):
     title = 'Orders'
 
+    paginator = Paginator(request.user.order_set.order_by('-created_at'), 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "shop/orders.html", {
         'title': title,
+        'page_obj': page_obj,
     })
 
-def order(request):
-    title = 'Order'
+def order(request, code):
+    order = Order.objects.filter(code=code).first()
+
+    if order is None:
+        return redirect('/')
 
     return render(request, "shop/order.html", {
-        'title': title,
+        'title': 'Order ' + order.code,
+        'order': order
     })

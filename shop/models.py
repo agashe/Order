@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.db import models
 from inventory.models import Product
 from django.contrib.auth.models import User
@@ -14,7 +15,7 @@ class Order(models.Model):
         return self.code
 
     def url(self):
-        return '/orders/' + self.code
+        return '/shop/orders/' + self.code
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)  

@@ -14,7 +14,7 @@
         <div class="header__cart__price">item: <span id="cart-total-mobile">$0.00</span></div>
     </div>
     <div class="humberger__menu__widget">
-        <div class="header__top__right__language">
+        {% comment %} <div class="header__top__right__language">
             <img src="{% static 'images/language.png' %}" alt="">
             <div>English</div>
             <span class="arrow_carrot-down"></span>
@@ -22,11 +22,14 @@
                 <li><a href="#">Spanis</a></li>
                 <li><a href="#">English</a></li>
             </ul>
-        </div>
+        </div> {% endcomment %}
         <div class="header__top__right__auth">
             {% if user.is_authenticated %}
                 <div class="header__top__right__auth mr-1">
                     <a href="/user/profile"><i class="fa fa-user"></i> Profile</a>
+                </div>
+                <div class="header__top__right__auth mr-1">
+                    <a href="/shop/orders"><i class="fa fa-list"></i> Orders</a>
                 </div>
                 <div class="header__top__right__auth">
                     <a href="/user/logout"><i class="fa fa-sign-out"></i> Logout</a>
@@ -87,7 +90,7 @@
                             <a href="{{ settings_twitter_link }}"><i class="fa fa-twitter"></i></a>
                             <a href="{{ settings_pintrest_link }}"><i class="fa fa-pinterest-p"></i></a>
                         </div>
-                        <div class="header__top__right__language">
+                        {% comment %} <div class="header__top__right__language">
                             <img src="{% static 'images/language.png' %}" alt="">
                             <div>English</div>
                             <span class="arrow_carrot-down"></span>
@@ -95,10 +98,13 @@
                                 <li><a href="#">Spanis</a></li>
                                 <li><a href="#">English</a></li>
                             </ul>
-                        </div>
+                        </div> {% endcomment %}
                         {% if user.is_authenticated %}
                             <div class="header__top__right__auth mr-1">
                                 <a href="/user/profile"><i class="fa fa-user"></i> Profile</a>
+                            </div>
+                            <div class="header__top__right__auth mr-1">
+                                <a href="/shop/orders"><i class="fa fa-list"></i> Orders</a>
                             </div>
                             <div class="header__top__right__auth">
                                 <a href="/user/logout"><i class="fa fa-sign-out"></i> Logout</a>
