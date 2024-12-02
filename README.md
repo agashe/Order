@@ -29,7 +29,6 @@ cd Order/
 python3 -m venv env
 
 source env/bin/activate
-
 ```
 
 Finally we install the Django framework :
