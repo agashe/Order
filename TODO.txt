@@ -2,6 +2,7 @@ In next iteration :
 
 * Forget password
 * Update password
+* Multiple addresses 
 * Enhance validation
 * Translation
 * Payment methods
@@ -9,3 +10,17 @@ In next iteration :
 * Better order code generation
 * Make separated table for order's details like email and phone
 * Order status
+* Discount coupon
+* Timer offers
+* Sizes / Colors
+* Tags
+* Notifications & Emails
+* Shipping options
+* Order cancellation
+* Compare
+* Wishlist
+* Autocomplete search
+* Products filters
+* Product reviews & rate
+* Order tracking
+* FAQ / Support pages
