@@ -1,5 +1,6 @@
 In next iteration :
 
+* Highlight header links
 * Forget password
 * Update password
 * Multiple addresses 
@@ -24,3 +25,4 @@ In next iteration :
 * Product reviews & rate
 * Order tracking
 * FAQ / Support pages
+* Minify assets
